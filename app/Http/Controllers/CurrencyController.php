@@ -13,7 +13,7 @@ class CurrencyController extends Controller
     {
         try {
             $request->validate([
-                'currency' => 'required|string',
+                'currency' => 'required|string|in:EUR,GBP,USD',
                 'amount' => 'required|numeric'
             ]);
             $user = Auth::user();
@@ -45,7 +45,16 @@ class CurrencyController extends Controller
             }
             $currencies = Currency::whereDate('date', '=', $date)->get();
             if (count($currencies)) {
-                return response()->json(['message' => 'Currencies fetched successfully', 'data' => $currencies]);
+                $formattedCurrencies = $currencies->map(
+                    function ($currency) {
+                        return [
+                            'currency' => $currency->currency,
+                            'date' => $currency->date,
+                            'amount' => $currency->amount
+                        ];
+                    }
+                );
+                return response()->json(['message' => 'Currencies fetched successfully', 'data' => $formattedCurrencies]);
             } else {
                 return response()->json(['message' => 'No currencies on specified date'], 404);
             }

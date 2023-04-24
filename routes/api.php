@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->group(function () {
+Route::middleware('auth:sanctum', 'admin')->group(function () {
     Route::post('/currencies', [CurrencyController::class, 'store']);
     Route::get('/currencies/date/{date}', [CurrencyController::class, 'getCurrenciesOnDate']);
     Route::get('/currencies/date/{date}/currency/{currency}', [CurrencyController::class, 'getCurrencyOnDate']);
